@@ -1,0 +1,3 @@
+rootProject.name = 'photosphere'
+
+include ':app'
