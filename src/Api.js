@@ -32,6 +32,15 @@ const api = {
       let endpoint = devUrl+urlSuffix;
       let jsonData = JSON.stringify({ urlData });
 
+      if (urlMethod == 'GET') {
+         jsonData = null;
+
+         let query = '';
+         for (let i in urlData) {
+            query += encodeURIComponent(i) + '=' + encodeURIComponent(urlData[i]) + '&';
+         }
+         endpoint += '?' + query;
+      }
       fetch(endpoint, {
          method: urlMethod,
          body: jsonData

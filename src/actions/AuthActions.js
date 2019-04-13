@@ -44,6 +44,7 @@ export const signInUser = ( email, pass) =>{
             email: email,
             pass: pass
          },
+      
          success: (json) => {
             if (json.error == '') {
 
@@ -126,4 +127,16 @@ export const changePass = (pass) =>{
          pass: pass
       }
    }
+};
+
+export const logout = () => {
+
+   AsyncStorage.setItem('jwt', '');
+
+   return{
+      type: 'changeStatus',
+      payload: {
+         status: 2
+      }
+   };
 };
