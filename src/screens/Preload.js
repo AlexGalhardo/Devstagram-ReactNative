@@ -49,11 +49,13 @@ export class Preload extends Component {
    }
 
    componentDidMount() {
-     this.props.checkLogin();
+      this.verifyStatus();
+      this.props.checkLogin();
+
    }
-   
    componentDidUpdate() {
       this.verifyStatus();
+      this.props.checkLogin();
    }
    
 } 

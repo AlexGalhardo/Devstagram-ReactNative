@@ -1,7 +1,8 @@
 import { AsyncStorage } from 'react-native';
+import api from '../Api'
 
 export const checkLogin = () =>{
-
+   
    return(dispatch) => {
       AsyncStorage.getItem('jwt')
       .then((data)=>{
@@ -35,36 +36,33 @@ export const checkLogin = () =>{
 
 export const signInUser = ( email, pass) =>{
    return (dispatch) => {
-     
-      let endPoint = 'https://alunos.b7web.com.br/apis/devstagram/users/login';
-      let jsonData = JSON.stringify({
-         email: email,
-         pass: pass
-      });
 
-      fetch(endPoint, {
-         method: 'POST',
-         body: jsonData
-      })
-      .then((r) => r.json())
-      .then((json) => {
-         if(json.error == ''){
-            
-            AsyncStorage.setItem('jwt', json.jwt);
-            
-            dispatch({
-               type: 'changeStatus',
-               payload: {
-                  status: 1
-               }
-            });
+      api.req({
+         endpoint: 'users/login',
+         method:'POST',
+         data:{
+            email: email,
+            pass: pass
+         },
+         success: (json) => {
+            if (json.error == '') {
 
-         } else {
-            alert(json.error);
+               AsyncStorage.setItem('jwt', json.jwt);
+
+               dispatch({
+                  type: 'changeStatus',
+                  payload: {
+                     status: 1
+                  }
+               });
+
+            } else {
+               alert(json.error);
+            }
+         },
+         error:(error) =>{
+            alert("Erro de requisição");
          }
-      })
-      .catch((error) => {
-         alert("Erro de requisição")
       });
    };
 };
@@ -72,36 +70,33 @@ export const signInUser = ( email, pass) =>{
 export const registerNewUser = (name, email, pass) =>{
    return (dispatch) => {
      
-      let endPoint = 'https://alunos.b7web.com.br/apis/devstagram/users/new';
-      let jsonData = JSON.stringify({
-         name: name,
-         email: email,
-         pass: pass
-      });
-
-      fetch(endPoint, {
+      api.req({
+         endpont: 'users/new',
          method: 'POST',
-         body: jsonData
-      })
-      .then((r) => r.json())
-      .then((json) => {
-         if(json.error == ''){
-            
-            AsyncStorage.setItem('jwt', json.jwt);
-            
-            dispatch({
-               type: 'changeStatus',
-               payload: {
-                  status: 1
-               }
-            });
+         data: {
+            name: name,
+            email: email,
+            pass: pass
+         },
+         success: (json) =>{
+            if (json.error == '') {
 
-         } else {
-            alert(json.error);
+               AsyncStorage.setItem('jwt', json.jwt);
+
+               dispatch({
+                  type: 'changeStatus',
+                  payload: {
+                     status: 1
+                  }
+               });
+
+            } else {
+               alert(json.error);
+            }
+         },
+         error:(error) =>{
+            alert("Erro de requisição");
          }
-      })
-      .catch((error) => {
-         alert("Erro de requisição")
       });
    };
 };
