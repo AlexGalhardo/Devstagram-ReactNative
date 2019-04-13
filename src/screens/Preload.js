@@ -20,7 +20,7 @@ export class Preload extends Component {
    render() {
      return (
        <View style={styles.container}>
-         <Text>Carregando Status: {this.props.status}</Text>
+         <Text>Carregando...</Text>
        </View>
      )
    }

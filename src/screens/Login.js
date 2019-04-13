@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { TextInput, TouchableHighlight, ImageBackground, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { checkLogin } from '../actions/AuthActions'
+import { StackActions, NavigationActions } from 'react-navigation';
+import { checkLogin, signInUser, changeEmail, changePass } from '../actions/AuthActions'
 
 export class Login extends Component {
    static navigationOptions = {
@@ -18,15 +19,34 @@ export class Login extends Component {
       this.props.navigation.navigate('SignUp');
    }
 
+   loginAction = () => {
+      this.props.signInUser(this.props.email, this.props.pass );
+   }
+      
+   ComponentDidUpdate() {
+      this.verifyStatus();
+   }
+
+   verifyStatus = () => {
+      if (this.props.status === 1) {
+         this.props.navigation.dispatch(StackActions.reset({
+            index: 0,
+            actions: [
+               NavigationActions.navigate({ routeName: 'Home' })
+            ]
+         }));
+      }
+   }
+
    render() {
       return (
          <ImageBackground source={require('../assets/bg.png')} style={styles.container}>
             <Text style={styles.logo}>PhotoSphere</Text>
 
-            <TextInput style={styles.input} placeholder="Digite seu e-mail" placeholderTextColor="#ffffff" underlineColorAndroid="transparent"/>
-            <TextInput style={styles.input} placeholder="Digite sua senha" placeholderTextColor="#ffffff" secureTextEntry={true} underlineColorAndroid="transparent"/>
+            <TextInput value={this.props.email} onChangeText={this.props.changeEmail} style={styles.input} placeholder="Digite seu e-mail" placeholderTextColor="#ffffff" underlineColorAndroid="transparent"/>
+            <TextInput value={this.props.pass} onChangeText={this.props.changePass} style={styles.input} placeholder="Digite sua senha" placeholderTextColor="#ffffff" secureTextEntry={true} underlineColorAndroid="transparent"/>
             
-            <TouchableHighlight onPress={() => { }} underlayColor="#307eaf" style={styles.actionButton}>
+            <TouchableHighlight onPress={this.loginAction} underlayColor="#307eaf" style={styles.actionButton}>
                <Text style={styles.actionButtonText}>Fazer Login</Text>
             </TouchableHighlight>
 
@@ -90,9 +110,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
    return {
-      status: state.auth.status
+      status: state.auth.status,
+      email: state.auth.email,
+      pass: state.auth.pass
    };
 }
 
-const LoginConnect = connect(mapStateToProps, { checkLogin })(Login);
+const LoginConnect = connect(mapStateToProps, { checkLogin, signInUser, changeEmail, changePass })(Login);
 export default LoginConnect;

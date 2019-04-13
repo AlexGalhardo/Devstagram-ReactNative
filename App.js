@@ -11,7 +11,7 @@ import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 
-//console.disableYellowBox = true;
+console.disableYellowBox = true;
 
 let store = createStore(Reducers, applyMiddleware(ReduxThunk));
 
