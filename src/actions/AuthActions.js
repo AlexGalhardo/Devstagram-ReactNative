@@ -120,11 +120,11 @@ export const changeEmail = (email) =>{
    }
 };
 
-export const changePass = (pass) =>{
+export const changePassword = (pass) =>{
    return {
-      type: 'changePass',
+      type: 'changePassword',
       payload: {
-         pass: pass
+         password: pass
       }
    }
 };
@@ -138,5 +138,5 @@ export const logout = () => {
       payload: {
          status: 2
       }
-   };
+   }
 };

@@ -1,7 +1,7 @@
 const initialState = {
    name:'',
    email:'',
-   pass:'',
+   password:'',
    status: 0
 };
 
@@ -15,8 +15,8 @@ const AuthReducer = ( state = initialState, action) => {
       return { ...state, email: action.payload.email };
    }
 
-   if (action.type == 'changePass') {
-      return { ...state, pass: action.payload.pass };
+   if (action.type == 'changePassword') {
+      return { ...state, password: action.payload.password };
    }
 
    if (action.type == 'changeStatus') {

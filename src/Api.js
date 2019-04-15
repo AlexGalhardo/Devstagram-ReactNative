@@ -30,7 +30,7 @@ const api = {
       }
 
       let endpoint = devUrl+urlSuffix;
-      let jsonData = JSON.stringify({ urlData });
+      let jsonData = JSON.stringify(urlData);
 
       if (urlMethod == 'GET') {
          jsonData = null;
@@ -47,9 +47,7 @@ const api = {
       })
       .then((r) => r.json())
       .then(urlSuccess)
-      .catch((error) => {
-         alert(urlError);
-      });
+      .catch(urlError);
    }
 };
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TextInput, TouchableHighlight, ImageBackground, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { checkLogin, registerNewUser, changeName, changeEmail, changePass } from '../actions/AuthActions'
+import { checkLogin, registerNewUser, changeName, changeEmail, changePassword } from '../actions/AuthActions'
 
 export class SignUp extends Component {
    static navigationOptions = {
@@ -23,7 +23,7 @@ export class SignUp extends Component {
       this.props.registerNewUser(
          this.props.name,
          this.props.email,
-         this.props.pass
+         this.props.password
       );
    }
 
@@ -49,7 +49,7 @@ export class SignUp extends Component {
 
             <TextInput value={this.props.name} onChangeText={this.props.changeName} style={styles.input} placeholder="Digite seu nome" placeholderTextColor="#ffffff" underlineColorAndroid="transparent" />
             <TextInput value={this.props.email} onChangeText={this.props.changeEmail} style={styles.input} placeholder="Digite seu e-mail" placeholderTextColor="#ffffff" underlineColorAndroid="transparent" />
-            <TextInput value={this.props.pass} onChangeText={this.props.changePass} style={styles.input} placeholder="Digite sua senha" placeholderTextColor="#ffffff" secureTextEntry={true} underlineColorAndroid="transparent" />
+            <TextInput value={this.props.password} onChangeText={this.props.changePassword} style={styles.input} placeholder="Digite sua senha" placeholderTextColor="#ffffff" secureTextEntry={true} underlineColorAndroid="transparent" />
 
             <TouchableHighlight onPress={this.registerAction} underlayColor="#307eaf" style={styles.actionButton}>
                <Text style={styles.actionButtonText}>Fazer Cadastro</Text>
@@ -118,9 +118,9 @@ const mapStateToProps = (state) => {
       status: state.auth.status,
       name: state.auth.name,
       email: state.auth.email,
-      pass: state.auth.pass
+      password: state.auth.password
    };
 }
 
-const SignUpConnect = connect(mapStateToProps, { checkLogin, registerNewUser, changeName, changeEmail, changePass })(SignUp);
+const SignUpConnect = connect(mapStateToProps, { checkLogin, registerNewUser, changeName, changeEmail, changePassword })(SignUp);
 export default SignUpConnect;

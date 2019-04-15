@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { checkLogin } from '../actions/AuthActions';
 import { getFeed } from '../actions/FeedActions';
+import FeedItemFake from '../components/feed/FeedItemFake';
 
 export class Feed extends Component {
    static navigationOptions = {
@@ -38,9 +39,18 @@ export class Feed extends Component {
    render() {
       return (
          <View style={styles.container}>
-            <Text>Feed de Fotos</Text>
+            {this.props.feedLoading == true &&
+               <View>
+                  <FeedItemFake />
+                  <FeedItemFake />
+               </View>
+            }
+
+            <Text>Feed de fotos</Text>
+
+            <Text>{this.props.feed.length}</Text>
          </View>
-      )
+      );
    }
    
 }
@@ -48,15 +58,14 @@ export class Feed extends Component {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
    }
 });
 
 const mapStateToProps = (state) => {
    return {
       status: state.auth.status,
-      feed: state.feed.feed
+      feed: state.feed.feed,
+      feedLoading: state.feed.feedLoading,
    };
 }
 

@@ -14,7 +14,6 @@ export class Preload extends Component {
      super(props)
      this.state = {}
 
-      this.verifyStatus = this.verifyStatus.bind(this);
    }
    
    render() {
@@ -24,7 +23,8 @@ export class Preload extends Component {
        </View>
      )
    }
-   verifyStatus(){
+
+   verifyStatus = () => {
 
       switch (this.props.status) {
          case 1:
@@ -49,13 +49,11 @@ export class Preload extends Component {
    }
 
    componentDidMount() {
-      this.verifyStatus();
       this.props.checkLogin();
 
    }
    componentDidUpdate() {
       this.verifyStatus();
-      this.props.checkLogin();
    }
    
 } 
