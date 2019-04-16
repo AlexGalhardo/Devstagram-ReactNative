@@ -2,15 +2,26 @@ import { AsyncStorage } from 'react-native';
 import api from '../Api';
 import { logout } from './AuthActions';
 
-export const getFeed = () => {
+export const setFeedRefreshing = (status) => {
+   return {
+      type: 'changeFeedRefreshingStatus',
+      payload: {
+         status: status
+      }
+   };
+};
+
+export const getFeed = (offset, isRefresh = false) => {
    return(dispatch) => {
 
-      dispatch({
-         type: 'changeFeedLoadingStatus',
-         payload: {
-            status: true
-         }
-      });
+      if (offset == 0 && isRefresh == false) {
+         dispatch({
+            type: 'changeFeedLoadingStatus',
+            payload: {
+               status: true
+            }
+         });
+      }
 
       AsyncStorage.getItem('jwt')
       .then((data) => {
@@ -18,7 +29,7 @@ export const getFeed = () => {
             api.req({
                endpoint:'users/feed',
                method:'GET',
-               data:{jwt:data},
+               data:{jwt:data, offset:offset },
                success:(json) => {
                   if (json.logged === true) {
 
@@ -28,6 +39,17 @@ export const getFeed = () => {
                            status: false
                         }
                      });
+                     
+                     dispatch({
+                        type: 'changeFeedRefreshingStatus',
+                        payload: {
+                           status: false
+                        }
+                     });
+                     
+                     if (isRefresh) {
+                        dispatch({ type: 'clearFeed' });
+                     }
 
                      dispatch({
                         type: 'incrementFeed',

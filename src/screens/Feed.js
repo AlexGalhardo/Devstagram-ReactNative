@@ -3,7 +3,7 @@ import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { checkLogin } from '../actions/AuthActions';
-import { getFeed, likePhoto } from '../actions/FeedActions';
+import { getFeed, likePhoto, setFeedRefreshing } from '../actions/FeedActions';
 import FeedItemFake from '../components/feed/FeedItemFake';
 import FeedItem from '../components/feed/FeedItem';
 
@@ -20,7 +20,7 @@ export class Feed extends Component {
    }
 
    componentDidMount(){
-      this.props.getFeed();
+      this.props.getFeed(0);
    }
 
    ComponentDidUpdate(){
@@ -41,6 +41,15 @@ export class Feed extends Component {
 
    likeAction = (id, is_liked) => {
       this.props.likePhoto(id, is_liked);
+   }
+
+   paginateFeed = () => {
+      this.props.getFeed(this.props.feed.length);
+   }
+
+   feedRefresh = () => {
+      this.props.setFeedRefreshing(true);
+      this.props.getFeed(0, true);
    }
 
    render() {
@@ -65,6 +74,10 @@ export class Feed extends Component {
                   renderItem={({ item }) => <FeedItem data={item} likeAction={this.likeAction} nav={this.props.navigation} />}
                   keyExtractor={(item) => item.id}
                   style={styles.feed}
+                  onEndReachedThreshold={0.5}
+                  onEndReached={this.paginateFeed}
+               refreshing={this.props.feedRefreshing}
+               onRefresh={this.feedRefresh}
                />
             }
 
@@ -94,8 +107,9 @@ const mapStateToProps = (state) => {
       status: state.auth.status,
       feed: state.feed.feed,
       feedLoading: state.feed.feedLoading,
+      feedRefreshing: state.feed.feedRefreshing
    };
 }
 
-const FeedConnect = connect(mapStateToProps, { checkLogin, getFeed, likePhoto})(Feed);
+const FeedConnect = connect(mapStateToProps, { checkLogin, setFeedRefreshing, getFeed, likePhoto})(Feed);
 export default FeedConnect;

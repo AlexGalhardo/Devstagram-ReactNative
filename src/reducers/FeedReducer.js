@@ -1,7 +1,8 @@
 const initialState = {
    feed:[],
    offset: 0,
-   feedLoading: false
+   feedLoading: false,
+   feedRefreshing: false
 };
 
 const FeedReducer = (state = initialState, action) => {
@@ -12,6 +13,14 @@ const FeedReducer = (state = initialState, action) => {
 
    if (action.type == 'changeFeedLoadingStatus') {
       return { ...state, feedLoading: action.payload.status };
+   }
+
+   if (action.type == 'changeFeedRefreshingStatus') {
+      return { ...state, feedRefreshing: action.payload.status };
+   }
+
+   if (action.type == 'clearFeed') {
+      return { ...state, feed:[] };
    }
 
    if (action.type == 'addLike') {
