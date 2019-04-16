@@ -14,6 +14,28 @@ const FeedReducer = (state = initialState, action) => {
       return { ...state, feedLoading: action.payload.status };
    }
 
+   if (action.type == 'addLike') {
+      let feed = state.feed;
+      for (let i in feed ) {
+         if (state.feed[i].id == action.payload.id) {
+            feed[i].like_count++;
+            feed[i].is_liked= true;
+         }
+      }
+      return { ...state, feed:feed };
+   }
+
+   if (action.type == 'removeLike') {
+      let feed = state.feed;
+      for (let i in feed ) {
+         if (state.feed[i].id == action.payload.id) {
+            feed[i].like_count--;
+            feed[i].is_liked= false;
+         }
+      }
+      return { ...state, feed:feed };
+   }
+
    return state;
 }
 

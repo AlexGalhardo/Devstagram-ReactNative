@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { checkLogin } from '../actions/AuthActions';
-import { getFeed } from '../actions/FeedActions';
+import { getFeed, likePhoto } from '../actions/FeedActions';
 import FeedItemFake from '../components/feed/FeedItemFake';
+import FeedItem from '../components/feed/FeedItem';
 
 export class Feed extends Component {
    static navigationOptions = {
@@ -13,14 +14,16 @@ export class Feed extends Component {
 
    constructor(props) {
       super(props)
-      this.state = {}
+      this.state = {
+         feedFake: [{ "id": "3", "id_user": "3", "url": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/photos\/i3.jpg", "date_posted": "2018-01-01 14:30:00", "name": "testador", "avatar": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/avatar\/default.jpg", "like_count": "0", "comments": [{ "id": "1", "id_user": "1", "id_photo": "3", "date_comment": "2018-01-01 18:00:00", "txt": "Show de bola!", "name": "Bonieky" }] }, { "id": "2", "id_user": "2", "url": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/photos\/i2.jpg", "date_posted": "2018-01-01 13:45:00", "name": "Testador", "avatar": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/avatar\/default.jpg", "like_count": "0", "comments": [] }, { "id": "1", "id_user": "2", "url": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/photos\/i1.jpg", "date_posted": "2018-01-01 12:30:00", "name": "Testador", "avatar": "https:\/\/alunos.b7web.com.br\/apis\/devstagram\/media\/avatar\/default.jpg", "like_count": "2", "comments": [], "is_liked":true }]
+      }
    }
 
-   componentDidMount() {
+   componentDidMount(){
       this.props.getFeed();
    }
 
-   ComponentDidUpdate() {
+   ComponentDidUpdate(){
       this.verifyStatus();
    }
 
@@ -36,6 +39,10 @@ export class Feed extends Component {
       }
    }
 
+   likeAction = (id, is_liked) => {
+      this.props.likePhoto(id, is_liked);
+   }
+
    render() {
       return (
          <View style={styles.container}>
@@ -46,9 +53,21 @@ export class Feed extends Component {
                </View>
             }
 
-            <Text>Feed de fotos</Text>
+            {(this.props.feedLoading == false && this.props.feed.length == 0) &&
+               <View style={styles.feedZero}>
+                  <Text>Não existem itens a serem mostrados</Text>
+               </View>
+            }
 
-            <Text>{this.props.feed.length}</Text>
+            {(this.props.feedLoading == false && this.props.feed.length > 0) &&
+               <FlatList
+                  data={this.props.feed}
+                  renderItem={({ item }) => <FeedItem data={item} likeAction={this.likeAction} nav={this.props.navigation} />}
+                  keyExtractor={(item) => item.id}
+                  style={styles.feed}
+               />
+            }
+
          </View>
       );
    }
@@ -58,6 +77,15 @@ export class Feed extends Component {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+   },
+   feed:{
+      flex: 1,
+   },
+   feedZero:{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+
    }
 });
 
@@ -69,5 +97,5 @@ const mapStateToProps = (state) => {
    };
 }
 
-const FeedConnect = connect(mapStateToProps, { checkLogin, getFeed })(Feed);
+const FeedConnect = connect(mapStateToProps, { checkLogin, getFeed, likePhoto})(Feed);
 export default FeedConnect;
