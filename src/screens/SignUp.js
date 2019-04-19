@@ -44,7 +44,7 @@ export class SignUp extends Component {
 
    render() {
       return (
-         <ImageBackground source={require('../assets/bg.png')} style={styles.container}>
+         <ImageBackground source={require('../assets/bg.jpg')} style={styles.container}>
             <Text style={styles.logo}>PhotoSphere</Text>
 
             <TextInput value={this.props.name} onChangeText={this.props.changeName} style={styles.input} placeholder="Digite seu nome" placeholderTextColor="#ffffff" underlineColorAndroid="transparent" />
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
    logo: {
       fontSize: 45,
       color: '#ffffff',
-      marginBottom: 30
+      marginBottom: 20
    },
    input: {
       width: "90%",

@@ -3,6 +3,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import Profile from './Profile';
 import Feed from './Feed';
+import Photo from './Photo';
 
 const Home = createStackNavigator({
    Feed: {
@@ -10,6 +11,9 @@ const Home = createStackNavigator({
    },
    Profile: {
       screen: Profile,
+   },
+   Photo: {
+      screen: Photo,
    }
 },{
    defaultNavigationOptions: {

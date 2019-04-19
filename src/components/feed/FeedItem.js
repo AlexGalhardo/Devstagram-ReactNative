@@ -21,14 +21,14 @@ export default class FeedItem extends Component {
    }
 
    userClick = () => {
-      this.props.nav.navigate('Profile', {
+      this.props.nav.push('Profile', {
          name: this.props.data.name,
          id: this.props.data.id_user
       });
    }
 
    commentUserClick = (name, id) => {
-      this.props.nav.navigate('Profile', {
+      this.props.nav.push('Profile', {
          name: name,
          id: id
       });
@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
       fontSize: 14
    },
    feedBody: {
-      flex: 1,
       backgroundColor: '#EEEEEE'
    },
    feedFooter: {

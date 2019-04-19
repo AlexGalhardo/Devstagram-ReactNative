@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import { Image } from 'react-native';
 import Home from './Home';
-import Explore from './Explore';
+import StackExplore from './StackExplore';
 import PhotoCamera from './PhotoCamera';
-import Profile from './Profile';
+import MyProfile from './MyProfile';
 
 const Tabs = createBottomTabNavigator({
    Home:{
@@ -24,7 +24,7 @@ const Tabs = createBottomTabNavigator({
       }
    },
    Explore:{
-      screen:Explore,
+      screen: StackExplore,
       navigationOptions: {
          tabBarIcon: (options) => {
             if (options.focused) {
@@ -55,8 +55,8 @@ const Tabs = createBottomTabNavigator({
          }
       }
    },
-   Profile:{
-      screen:Profile,
+   MyProfile:{
+      screen: MyProfile,
       navigationOptions: {
          tabBarIcon: (options) => {
             if (options.focused) {

@@ -41,7 +41,7 @@ export class Login extends Component {
 
    render() {
       return (
-         <ImageBackground source={require('../assets/bg.png')} style={styles.container}>
+         <ImageBackground source={require('../assets/bg.jpg')} style={styles.container}>
             <Text style={styles.logo}>PhotoSphere</Text>
 
             <TextInput value={this.props.email} onChangeText={this.props.changeEmail} style={styles.input} placeholder="Digite seu e-mail" placeholderTextColor="#ffffff" underlineColorAndroid="transparent"/>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
    logo:{
       fontSize: 45,
       color: '#ffffff',
-      marginBottom: 30
+      marginBottom: 35
    },
    input:{
       width: "90%",
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 20
+      marginTop: 50
    },
    signButtonText:{
       color: '#ffffff',

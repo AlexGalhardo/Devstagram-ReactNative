@@ -1,19 +1,42 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { checkLogin } from '../actions/AuthActions'
-import { ExploreItem } from '../components/explore/exploreItem';
+import { checkLogin } from '../actions/AuthActions';
+import { getExploreItems, setExploreRefreshing } from '../actions/ExploreActions';
+import ExploreItem from '../components/explore/ExploreItem';
 
 export class Explore extends Component {
    static navigationOptions = {
-      title: 'Explore'
+      title: 'Explorar'
    }
 
    constructor(props) {
       super(props)
-      this.state = {
-         lista:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-      };
+      this.state = {};
+   }
+
+   componentDidMount() {
+      this.props.getExploreItems();
+   }
+
+   paginateExplore = () => {
+      let excludes= [];
+      for ( let i in this.props.exploreItems){
+         excludes.push(this.props.exploreItems[i].id);
+      }
+      let excludeString = excludes.join(',');
+
+      this.props.getExploreItems(excludeString);
+   }
+   exploreRefresh = () => { 
+      this.props.setExploreRefreshing(true);
+      this.props.getExploreItems('', true);
+   }
+
+   exploreItemClick = (idPhoto) => {
+      this.props.navigation.navigate('Photo', {
+         id: idPhoto
+      });
    }
 
    render() {
@@ -22,13 +45,17 @@ export class Explore extends Component {
             <FlatList 
                style={styles.lista}
                numColumns={3}
-               data={this.state.lista}
-               renderItem={()=><ExploreItem />}
+               data={this.props.exploreItems}
+               keyExtractor={(item)=>item.id}
+               renderItem={({ item }) => <ExploreItem data={item} onClick={this.exploreItemClick} />}
+               onEndReachedThreshold={0.5}
+               onEndReached={this.paginateExplore}
+               refreshing={this.props.exploreRefreshing}
+               onRefresh={this.exploreRefresh}
             />
          </View>
-      )
+      );
    }
-
 }
 
 const styles = StyleSheet.create({
@@ -36,7 +63,6 @@ const styles = StyleSheet.create({
       flex: 1
    },
    lista:{
-      backgroundColor: '#FF0000',
       width:'100%',
       height:'100%'
    }
@@ -44,9 +70,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
    return {
-      status: state.auth.status
+      status: state.auth.status,
+      exploreItems: state.explore.exploreItems,
+      exploreRefreshing: state.explore.exploreRefreshing
    };
 }
 
-const ExploreConnect = connect(mapStateToProps, { checkLogin })(Explore);
+const ExploreConnect = connect(mapStateToProps, { checkLogin, setExploreRefreshing, getExploreItems })(Explore);
 export default ExploreConnect;
