@@ -3,7 +3,7 @@ import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import { Image } from 'react-native';
 import Home from './Home';
 import StackExplore from './StackExplore';
-import PhotoCamera from './PhotoCamera';
+import StackCamera from './StackCamera';
 import MyProfile from './MyProfile';
 
 const Tabs = createBottomTabNavigator({
@@ -40,7 +40,7 @@ const Tabs = createBottomTabNavigator({
       }
    },
    PhotoCamera:{
-      screen:PhotoCamera,
+      screen:StackCamera,
       navigationOptions: {
          tabBarIcon: (options) => {
             if (options.focused) {

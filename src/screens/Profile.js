@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, ScrollView, View, Image, Text, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { checkLogin, logout } from '../actions/AuthActions'
 import { getUserInfo } from '../actions/ProfileActions'
 import ExploreItem from '../components/explore/ExploreItem';
@@ -73,7 +74,15 @@ export class Profile extends Component {
                      </View>
                      <View style={styles.editProfilearea}>
                      {this.state.id == null && 
-                        <Button title="Editar Perfil" onClick={()=>{}}/>
+                        <Button title="Sair" onPress={() => {
+                           this.props.logout();
+                           this.props.navigation.dispatch(StackActions.reset({
+                              index: 0,
+                              actions: [
+                                 NavigationActions.navigate({ routeName: 'Login' })
+                              ]
+                           }));
+                        }} />
                      }
                      </View>
                   </View>

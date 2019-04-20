@@ -135,14 +135,14 @@ const styles = StyleSheet.create({
    avatar: {
       width: 40,
       height: 40,
-      backgroundColor: '#00FF00',
       marginLeft: 10,
       marginRight: 15,
       borderRadius: 20
    },
    avatarImg: {
       width: 40,
-      height: 40
+      height: 40,
+      borderRadius: 20
    },
    userName: {
       width: 150,
