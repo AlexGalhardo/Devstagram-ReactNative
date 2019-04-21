@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { ScrollView, View, StyleSheet, CameraRoll, Image, Platform, PermissionsAndroid } from 'react-native';
+import { TouchableHighlight, ScrollView, View, StyleSheet, CameraRoll, Image, Platform, PermissionsAndroid } from 'react-native';
 import { connect } from 'react-redux';
-import { checkLogin } from '../actions/AuthActions'
+import { checkLogin } from '../actions/AuthActions';
+import { setPhotoSelected } from '../actions/CameraActions';
+
 
 export class PhotoCameraGallery extends Component {
    static navigationOptions = {
@@ -18,7 +20,6 @@ export class PhotoCameraGallery extends Component {
    }
    
    loadPhotos = async () => {
-      
       if (await this.requestPermission()) {
          CameraRoll.getPhotos({
             first: 20,
@@ -31,7 +32,7 @@ export class PhotoCameraGallery extends Component {
                alert(err);
             });
       } else {
-         alert("ERRO 2");
+         this.props.navigation.back();
       }
    }
 
@@ -41,33 +42,41 @@ export class PhotoCameraGallery extends Component {
             const granted = await PermissionsAndroid.request(
                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
                {
-                  title: 'Acessar a Galeria',
-                  message: 'Este aplicativo precisa de sua permissão para acessar a galeria.',
-                  buttonNegative: 'Cancel',
-                  buttonPositive: 'OK',
+                  title: 'Cool Photo App Camera Permission',
+                  message: 'Cool Photo App needs access to your camera'
                }
             );
-            if (granted == PermissionsAndroid.RESULTS.GRANTED) {
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                return true;
             } else {
                return false;
             }
          }
          catch (e) {
-            alert(e)
+            this.props.navigation.back();
          }
       } else {
          return true;
+      }
+   }
+
+   selectPhoto = (key) => {
+      if (this.state.photos[key]) {
+         let uri = this.state.photos[key].node.image.uri;
+         this.props.setPhotoSelected(uri);
+         this.props.navigation.navigate('PhotoCameraEffects');
       }
    }
    
    render() {
       return (
          <ScrollView style={styles.container}>
-            <View style={StyleSheet.photoArea} >
+            <View style={styles.photoArea} >
                {this.state.photos.map((obj, key)=>{
                   return (
-                     <Image key={key} style={styles.img} source={{uri:obj.node.img.uri}} />
+                     <TouchableHighlight onPress={() => { this.selectPhoto(key) }} >
+                        <Image key={key} style={styles.img} source={{uri:obj.node.image.uri}} />
+                     </TouchableHighlight>
                   )
                })}
             </View>
@@ -81,13 +90,13 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#000000'
    },
-   img:{
-      height: 100,
-      width: 100
-   },
    photoArea:{
       flexDirection: 'row',
       flexWrap: 'wrap'
+   },
+   img:{
+      height: 120,
+      width: 120
    }
 });
 
@@ -97,5 +106,5 @@ const mapStateToProps = (state) => {
    };
 }
 
-const PhotoCameraGalleryConnect = connect(mapStateToProps, { checkLogin })(PhotoCameraGallery);
+const PhotoCameraGalleryConnect = connect(mapStateToProps, { setPhotoSelected, checkLogin })(PhotoCameraGallery);
 export default PhotoCameraGalleryConnect;

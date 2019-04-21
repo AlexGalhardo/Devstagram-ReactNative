@@ -3,6 +3,9 @@ import { Image, View, Dimensions, StyleSheet, TouchableHighlight } from 'react-n
 import { connect } from 'react-redux';
 import { checkLogin } from '../actions/AuthActions'
 import CameraClose from '../components/Camera/CameraClose';
+import { RNCamera } from 'react-native-camera';
+import { withNavigationFocus } from 'react-navigation';
+import { setPhotoSelected } from '../actions/CameraActions';
 
 export class PhotoCamera extends Component {
    static navigationOptions = ({navigation}) =>({
@@ -37,12 +40,12 @@ export class PhotoCamera extends Component {
 
    flipClick= () => {
       let state = this.state;
-      switch (this.state.flashMode) {
+      switch (this.state.cameraType) {
          case 'back':
-            this.state.flashMode = 'front';
+            this.state.cameraType = 'front';
          break;
          case 'front':
-            this.state.flashMode = 'back';
+            this.state.cameraType = 'back';
          break;
       }
       this.setState(state);
@@ -53,9 +56,50 @@ export class PhotoCamera extends Component {
    }
 
    takePhotoClick = () => {
-
+      if (this.camera) {
+         this.camera.takePictureAsync({
+            quality: 0.8,
+            base64: true
+         })
+         .then(this.getPhotoData)
+      }
    }
 
+   getPhotoData = (data) => {
+      this.props.setPhotoSelected(data.uri);
+      this.props.navigation.navigate('PhotoCameraEffects');
+   }
+
+   renderCamera = () => {
+      const isFocused = this.props.navigation.isFocused();
+      let cameraType = RNCamera.Constants.Type.back;
+      
+      if (this.state.cameraType == 'front') {
+         cameraType = RNCamera.Constants.Type.front
+      }
+
+      let flashMode = RNCamera.Constants.FlashMode.auto;
+
+      if (this.state.flashMode == 'off') {
+         flashMode = RNCamera.Constants.FlashMode.off
+      } else if (this.state.flashMode == 'on') {
+         flashMode = RNCamera.Constants.FlashMode.on
+      } 
+
+      if (isFocused) {
+         return (
+            <RNCamera
+               ref={ref => { this.camera = ref; }}
+               style={{ flex: 1 }}
+               type={cameraType}
+               flashMode={flashMode}
+            />
+         )
+      } else {
+         return null;
+      }
+
+   }
     
    render() {
       let cameraWidth = Dimensions.get('window').width;
@@ -69,8 +113,8 @@ export class PhotoCamera extends Component {
 
       return (
          <View style={styles.container}>
-            <View style={{ width: cameraWidth, height: cameraWidth, backgroundColor:'#333333'}}>
-            
+            <View style={{ overflow: 'hidden', width: cameraWidth, height: cameraWidth, backgroundColor:'#333333'}}>
+             {this.renderCamera()}
             </View>
             <View style={styles.controlArea}>
                <View style={styles.cameraControl}>
@@ -161,5 +205,6 @@ const mapStateToProps = (state) => {
    };
 }
 
-const PhotoCameraConnect = connect(mapStateToProps, { checkLogin })(PhotoCamera);
-export default PhotoCameraConnect;
+const PhotoCameraConnect = connect(mapStateToProps, { checkLogin, setPhotoSelected})(PhotoCamera);
+
+export default withNavigationFocus(PhotoCameraConnect);
